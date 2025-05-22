@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Análisis Numérico - Inicio{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Bienvenido al Proyecto de Análisis Numérico</h1>
+    <p class="lead">Esta aplicación le permite resolver problemas mediante diferentes métodos numéricos.</p>
+    <hr class="my-4">
+    <p>Seleccione uno de los capítulos para comenzar:</p>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Capítulo 1</h5>
+                <p class="card-text">Métodos para encontrar raíces de ecuaciones no lineales.</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">Bisección</li>
+                    <li class="list-group-item">Regla Falsa</li>
+                </ul>
+                <a href="{% url 'metodos_numericos:capitulo1' %}" class="btn btn-primary">Ir al Capítulo 1</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Capítulo 2</h5>
+                <p class="card-text">Métodos para resolver sistemas de ecuaciones lineales.</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">[METODO]</li>
+                </ul>
+                <a href="{% url 'metodos_numericos:capitulo2' %}" class="btn btn-primary">Ir al Capítulo 2</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Capítulo 3</h5>
+                <p class="card-text">Métodos para interpolación de funciones.</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">[METODO]</li>
+                </ul>
+                <a href="{% url 'metodos_numericos:capitulo3' %}" class="btn btn-primary">Ir al Capítulo 3</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

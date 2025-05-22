@@ -1,64 +1,94 @@
+import numpy as np
 import sympy as sp
 
-def biseccion(func_str, xi, xs, tol, niter):
-    x = sp.symbols('x')
-    f = sp.sympify(func_str)  # Convierte la cadena a expresión simbólica
-
-    fi = float(f.subs(x, xi))
-    fs = float(f.subs(x, xs))
-
-    if fi == 0:
-        s = xi
-        E = [0]
-        print(f'{xi} es raíz de f(x)')
-        return s, E, [fi]
-    elif fs == 0:
-        s = xs
-        E = [0]
-        print(f'{xs} es raíz de f(x)')
-        return s, E, [fs]
-    elif fi * fs < 0:
-        c = 0
-        xm = (xi + xs) / 2
-        fm = [float(f.subs(x, xm))]
-        E = [tol + 1]
-        error = E[0]
-
-        print('-----------------------------------------------------------------')
-        print('| Iter |    xi    |    xs    |    xm    |  f(xm)   |   Error    |')
-        print('-----------------------------------------------------------------')
-
-        while error > tol and fm[c] != 0 and c < niter:
-            print(f'|  {c:3d} | {xi:8.5f} | {xs:8.5f} | {xm:8.5f} | {fm[c]:8.5f} | {error:10.5e} |')
-
-            if fi * fm[c] < 0:
-                xs = xm
-                fs = float(f.subs(x, xs))
-            else:
-                xi = xm
-                fi = float(f.subs(x, xi))
-
-            xa = xm
-            xm = (xi + xs) / 2
-            fm.append(float(f.subs(x, xm)))
-            E.append(abs(xm - xa))
-            error = E[-1]
-            c += 1
-
-        print(f'|  {c:3d} | {xi:8.5f} | {xs:8.5f} | {xm:8.5f} | {fm[c]:8.5f} | {error:10.5e} |')
-        print('-----------------------------------------------------------------')
-
-        if fm[c] == 0:
-            s = xm
-            print(f'{xm} es raíz de f(x)')
-        elif error < tol:
-            s = xm
-            print(f'{xm} es una aproximación de una raíz de f(x) con una tolerancia = {tol}')
+def biseccion(funcion_str, a, b, tolerancia, max_iteraciones):
+    """
+    Implementa el método de bisección para encontrar raíces de ecuaciones no lineales.
+    
+    Args:
+        funcion_str (str): Expresión de la función como string.
+        a (float): Límite inferior del intervalo inicial.
+        b (float): Límite superior del intervalo inicial.
+        tolerancia (float): Tolerancia para el criterio de parada.
+        max_iteraciones (int): Número máximo de iteraciones.
+        
+    Returns:
+        dict: Diccionario con los resultados del método.
+    """
+    # Convertir la función string a una función evaluable
+    x = sp.symbols("x")
+    funcion_expr = sp.sympify(funcion_str)
+    f = sp.lambdify(x, funcion_expr)
+    
+    # Verificar que f(a) * f(b) < 0
+    fa = f(a)
+    fb = f(b)
+    
+    if fa * fb >= 0:
+        return {
+            "error": "El intervalo [a, b] no cumple con el teorema de Bolzano (f(a) * f(b) < 0)",
+            "success": False
+        }
+    
+    # Inicializar variables
+    iteraciones = []
+    error = float('inf')
+    
+    # Variables para el método
+    a_n = a
+    b_n = b
+    c = None
+    
+    for i in range(max_iteraciones):
+        # Guardar el valor de c anterior para calcular el error
+        c_anterior = c
+        
+        # Calcular el punto medio
+        c = (a_n + b_n) / 2
+        fc = f(c)
+        
+        # Calcular error (absoluto)
+        if c_anterior is not None:
+            error = abs(c - c_anterior)
+        
+        # Guardar información de la iteración como diccionario (no como tupla)
+        iteracion = {
+            'iteracion': i + 1,
+            'a': a_n,
+            'b': b_n,
+            'c': c,
+            'fc': fc,
+            'error': error if c_anterior is not None else None
+        }
+        
+        iteraciones.append(iteracion)
+        
+        # Verificar si hemos encontrado la raíz
+        if abs(fc) < 1e-10:  # consideramos f(c) = 0
+            break
+            
+        # Verificar si se ha alcanzado la tolerancia
+        if error < tolerancia and i > 0:
+            break
+            
+        # Actualizar el intervalo para la siguiente iteración
+        if fa * fc < 0:
+            b_n = c
+            fb = fc
         else:
-            s = xm
-            print(f'El método fracasó después de {niter} iteraciones')
-
-        return s, E, fm
-    else:
-        print('El intervalo es inadecuado')
-        return None, None, None
+            a_n = c
+            fa = fc
+    
+    # Preparar resultados
+    resultado = {
+        'raiz': c,
+        'error': error,
+        'iteraciones': iteraciones,
+        'convergencia': error < tolerancia,
+        'funcion': funcion_str,
+        'valor_funcion': fc,
+        'num_iteraciones': len(iteraciones),
+        'success': True
+    }
+    
+    return resultado

@@ -1,0 +1,34 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Capítulo 1: Raíces de Ecuaciones{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Capítulo 1</h1>
+    <p class="lead">Métodos numéricos para encontrar raíces de ecuaciones no lineales.</p>
+    <hr class="my-4">
+    <p>Seleccione uno de los siguientes métodos:</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Bisección</h5>
+                <p class="card-text">Método que divide el intervalo por la mitad repetidamente hasta encontrar la raíz.</p>
+                <a href="{% url 'metodos_numericos:biseccion' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Regla Falsa</h5>
+                <p class="card-text">Método que utiliza interpolación lineal para aproximar la raíz en cada iteración.</p>
+                <a href="{% url 'metodos_numericos:regla_falsa' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

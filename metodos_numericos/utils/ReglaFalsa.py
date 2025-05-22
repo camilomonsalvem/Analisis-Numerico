@@ -1,51 +1,97 @@
+import numpy as np
 import sympy as sp
 
-def regla_falsa(a, b, tol, niter, A):
+def regla_falsa(funcion_str, a, b, tolerancia, max_iteraciones):
+    """
+    Implementa el método de regla falsa para encontrar raíces de ecuaciones no lineales.
+    
+    Args:
+        funcion_str (str): Expresión de la función como string.
+        a (float): Límite inferior del intervalo inicial.
+        b (float): Límite superior del intervalo inicial.
+        tolerancia (float): Tolerancia para el criterio de parada.
+        max_iteraciones (int): Número máximo de iteraciones.
+        
+    Returns:
+        dict: Diccionario con los resultados del método.
+    """
+    # Convertir la función string a una función evaluable
     x = sp.symbols('x')
-    f = sp.exp(-2*x + A) - x
-    # f = -sp.log(x) - x + A  # Alternativa comentada según MATLAB
-
-    fa = float(f.subs(x, a))
-    fb = float(f.subs(x, b))
-
-    if fa * fb > 0:
-        raise ValueError("El intervalo [a, b] no encierra una raíz. Cambie el intervalo.")
-
-    c = 0
-    xn = [a]
-    E = [tol + 1]
-    fm = [fa]
-
-    print('\n-----------------------------------------------------------')
-    print('| Iter |      Xn      |     f(Xn)     |     Error      |')
-    print('-----------------------------------------------------------')
-
-    while E[-1] > tol and c < niter:
-        x_new = (a * fb - b * fa) / (fb - fa)
-        f_new = float(f.subs(x, x_new))
-
-        xn.append(x_new)
-        fm.append(f_new)
-        E.append(abs(xn[-1] - xn[-2]))
-
-        print(f'|  {c:3d}  |  {xn[-1]:10.6f}  |  {fm[-1]:10.6f}  |  {E[-1]:10.6f}  |')
-
-        if fa * f_new < 0:
-            b = x_new
-            fb = f_new
+    funcion_expr = sp.sympify(funcion_str)
+    f = sp.lambdify(x, funcion_expr)
+    
+    # Verificar que f(a) * f(b) < 0
+    fa = f(a)
+    fb = f(b)
+    
+    if fa * fb >= 0:
+        return {
+            "error": "El intervalo [a, b] no cumple con el teorema de Bolzano (f(a) * f(b) < 0)",
+            "success": False
+        }
+    
+    # Inicializar variables
+    iteraciones = []
+    error = float('inf')
+    c_anterior = None
+    
+    # Variables para el método
+    a_n = a
+    b_n = b
+    fa_n = fa
+    fb_n = fb
+    
+    for i in range(max_iteraciones):
+        # Calcular c usando regla falsa (intersección con el eje x)
+        c = a_n - fa_n * (b_n - a_n) / (fb_n - fa_n)
+        fc = f(c)
+        
+        # Calcular error (absoluto)
+        if c_anterior is not None:
+            error = abs(c - c_anterior)
+        
+        # Guardar información de la iteración
+        iteracion = {
+            'iteracion': i + 1,
+            'a': a_n,
+            'b': b_n,
+            'c': c,
+            'fa': fa_n,
+            'fb': fb_n,
+            'fc': fc,
+            'error': error if c_anterior is not None else None
+        }
+        
+        iteraciones.append(iteracion)
+        
+        # Verificar si hemos encontrado la raíz
+        if abs(fc) < 1e-10:  # consideramos f(c) = 0
+            break
+            
+        # Verificar si se ha alcanzado la tolerancia
+        if error < tolerancia and i > 0:
+            break
+            
+        # Actualizar el intervalo para la siguiente iteración
+        if fa_n * fc < 0:
+            b_n = c
+            fb_n = fc
         else:
-            a = x_new
-            fa = f_new
-
-        c += 1
-
-    print('-----------------------------------------------------------')
-
-    if fm[-1] == 0:
-        print(f'{xn[-1]} es una raíz exacta.')
-    elif E[-1] < tol:
-        print(f'{xn[-1]} es una aproximación de la raíz con tolerancia {tol}.')
-    else:
-        print(f'El método fracasó después de {niter} iteraciones.')
-
-    return c, xn, fm, E
+            a_n = c
+            fa_n = fc
+        
+        c_anterior = c
+    
+    # Preparar resultados
+    resultado = {
+        'raiz': c,
+        'error': error,
+        'iteraciones': iteraciones,
+        'convergencia': error < tolerancia,
+        'funcion': funcion_str,
+        'valor_funcion': fc,
+        'num_iteraciones': len(iteraciones),
+        'success': True
+    }
+    
+    return resultado

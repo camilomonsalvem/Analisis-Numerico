@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from .utils import biseccion, generar_grafica, regla_falsa
-
+from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo
 def index(request):
     """Vista de la página principal."""
     return render(request, 'home/index.html')
@@ -84,3 +83,45 @@ def regla_falsa_view(request):
             context['error'] = f"Error: {str(e)}"
     
     return render(request, 'capitulo1/regla_falsa.html', context)
+
+
+
+def punto_fijo_view(request):
+    """
+    Vista para el método de Punto Fijo.
+    """
+
+    context = {
+        'title': 'Método de Punto Fijo'
+    }
+
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            function_f = request.POST.get('function_f')
+            function_g = request.POST.get('function_g')
+            x0 = float(request.POST.get('x0'))
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+
+            # Ejecutar el método
+            resultado = punto_fijo(function_f, function_g, x0, tolerancia, max_iter)
+
+            # Revisar si hubo error
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo1/punto_fijo.html', context)
+
+            # (Opcional) generar gráfica si tienes función para eso
+            # if 'funcion' in locals():
+            #     grafica = generar_grafica(function_f, a, b, resultado['resultado_principal'], 'Método de Punto Fijo')
+            #     context['grafica'] = grafica
+
+            # Agregar resultados al contexto
+            context['resultado'] = resultado
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo1/punto_fijo.html', context)
+

@@ -11,6 +11,8 @@ urlpatterns = [
     path('capitulo1/', views.capitulo1, name='capitulo1'),
     path('capitulo1/biseccion/', views.biseccion_view, name='biseccion'),
     path('capitulo1/regla-falsa/', views.regla_falsa_view, name='regla_falsa'),
+    path('capitulo1/punto-fijo/', views.punto_fijo_view, name='punto_fijo'),
+
     
     # Capítulo 2
     path('capitulo2/', views.capitulo2, name='capitulo2'),

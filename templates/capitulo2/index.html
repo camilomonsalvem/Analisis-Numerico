@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Capítulo 2: Métodos de Derivadas{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Capítulo 2</h1>
+    <p class="lead">Métodos numéricos basados en derivadas para encontrar raíces de ecuaciones.</p>
+    <hr class="my-4">
+    <p>Seleccione uno de los siguientes métodos:</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Raíces Múltiples</h5>
+                <p class="card-text">Método que mejora la convergencia cuando se conoce la multiplicidad de la raíz.</p>
+                <a href="{% url 'metodos_numericos:raices_multiples' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

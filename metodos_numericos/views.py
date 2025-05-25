@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo
+from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo, raices_multiples
 def index(request):
     """Vista de la página principal."""
     return render(request, 'home/index.html')
@@ -124,4 +124,39 @@ def punto_fijo_view(request):
             context['error'] = f"Error: {str(e)}"
 
     return render(request, 'capitulo1/punto_fijo.html', context)
+
+def raices_multiples_view(request):
+    """
+    Vista para el método de Raíces Múltiples.
+    """
+
+    context = {
+        'title': 'Método de Raíces Múltiples'
+    }
+
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            function_f = request.POST.get('function_f')
+            x0 = float(request.POST.get('x0'))
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+            multiplicidad = int(request.POST.get('multiplicidad'))
+
+            # Ejecutar el método
+            resultado = raices_multiples(function_f, x0, tolerancia, max_iter, multiplicidad)
+
+            # Revisar si hubo error
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo1/raices_multiples.html', context)
+
+            # Agregar resultados al contexto
+            context['resultado'] = resultado
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo1/raices_multiples.html', context)
+
 

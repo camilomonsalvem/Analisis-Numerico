@@ -1,0 +1,124 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Raíces Múltiples{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Método de Raíces Múltiples</h1>
+    <p class="lead">Ingrese los parámetros para aplicar el método.</p>
+
+    <!-- PASOS DEL MÉTODO -->
+    <div class="card border-primary mb-3">
+        <div class="card-header bg-primary text-white">Método de Raíces Múltiples</div>
+        <div class="card-body">
+            <h5 class="card-title">Pasos del método:</h5>
+            <ol class="mb-0">
+                <li>Partir de una función \( f(x) \) continua y derivable.</li>
+                <li>Proporcionar una aproximación inicial \( x_0 \) y la multiplicidad \( m \).</li>
+                <li>Calcular \( f(x_n) \) y \( f'(x_n) \).</li>
+                <li>Actualizar con la fórmula:<br>
+                    \( x_{n+1} = x_n - m \cdot \frac{f(x_n)}{f'(x_n)} \)
+                </li>
+                <li>Calcular el error \( |x_{n+1} - x_n| \).</li>
+                <li>Si el error es menor a la tolerancia, detener.</li>
+                <li>Si no, repetir desde el paso 3 con \( x_{n+1} \).</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- INSTRUCCIONES -->
+    <div class="card border-info mb-4">
+        <div class="card-header bg-info text-white">Instrucciones</div>
+        <div class="card-body">
+            <ul class="mb-0">
+                <li>Escribe las funciones en términos de la variable <code>x</code>.</li>
+                <li>Usa operadores: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>**</code> (potencia).</li>
+                <li>Funciones matemáticas válidas: <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>exp</code>, <code>log</code>, <code>sqrt</code>, etc.</li>
+            </ul>
+            <p class="mt-2 mb-0"><strong>Ejemplos:</strong></p>
+            <ul>
+                <li><code>f(x): x**3 - 3*x + 2</code></li>
+                <li><code>f(x): sin(x) - x/2</code></li>
+                <li><code>f(x): x**2 - 2</code></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Mostrar errores si existen -->
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <!-- Formulario -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="function_f" class="form-label">Función f(x)</label>
+            <input type="text" class="form-control" id="function_f" name="function_f" placeholder="Ej: x**3 - x - 1" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="x0" class="form-label">Valor Inicial (x₀)</label>
+            <input type="number" step="any" class="form-control" id="x0" name="x0" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="tolerancia" class="form-label">Tolerancia</label>
+            <input type="number" step="any" class="form-control" id="tolerancia" name="tolerancia" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="max_iter" class="form-label">Máximo de Iteraciones</label>
+            <input type="number" class="form-control" id="max_iter" name="max_iter" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="multiplicidad" class="form-label">Multiplicidad</label>
+            <input type="number" class="form-control" id="multiplicidad" name="multiplicidad" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Calcular</button>
+    </form>
+
+    <!-- Resultados -->
+    {% if resultado %}
+        <hr>
+        <h3>Resultado</h3>
+        <p><strong>Raíz aproximada:</strong> {{ resultado.resultado_principal }}</p>
+        <p><strong>Error final:</strong> {{ resultado.error }}</p>
+        <p><strong>Convergencia:</strong> {{ resultado.convergencia|yesno:"Sí,No" }}</p>
+        <p><strong>Iteraciones:</strong> {{ resultado.num_iteraciones }}</p>
+
+        <h4 class="mt-4">Detalle de Iteraciones</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Iteración</th>
+                        <th>x</th>
+                        <th>f(x)</th>
+                        <th>f'(x)</th>
+                        <th>x siguiente</th>
+                        <th>Error</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in resultado.iteraciones %}
+                        <tr>
+                            <td>{{ i.iteracion }}</td>
+                            <td>{{ i.valor }}</td>
+                            <td>{{ i.f_x }}</td>
+                            <td>{{ i.f_prime_x }}</td>
+                            <td>{{ i.x_siguiente }}</td>
+                            <td>{{ i.error }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

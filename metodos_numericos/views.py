@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo, raices_multiples, secante_metodo
+from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo, raices_multiples, secante_metodo, newton_metodo
 def index(request):
     """Vista de la página principal."""
     return render(request, 'home/index.html')
@@ -205,3 +205,39 @@ def secante_metodo_view(request):
             context['error'] = f"Error: {str(e)}"
 
     return render(request, 'capitulo1/secante_metodo.html', context)
+
+def newton_metodo_view(request):
+    """
+    Vista para el método de Newton.
+    """
+    context = {
+        'title': 'Método de Newton',
+    }
+
+    if request.method == 'POST':
+        try:
+            funcion_str = request.POST.get('function_f')
+            x0 = float(request.POST.get('x0'))
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+
+            # Ejecutar método de Newton
+            resultado = newton_metodo(funcion_str, x0, tolerancia, max_iter)
+
+            # Verificar si hubo error
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo1/newton_method.html', context)
+
+            # Generar gráfica con intervalo alrededor del valor inicial y raíz estimada
+            a = x0 - 5
+            b = x0 + 5
+            grafica = generar_grafica(funcion_str, a, b, raiz=resultado['resultado_principal'], metodo='Método de Newton')
+
+            context['resultado'] = resultado
+            context['grafica'] = grafica
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo1/newton_metodo.html', context)

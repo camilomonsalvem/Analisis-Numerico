@@ -4,7 +4,7 @@ from .ReglaFalsa import regla_falsa
 from .PuntoFijo import punto_fijo
 from .RaicesMultiples import raices_multiples
 from .Secante import secante_metodo
-
+from .Newton import newton_metodo
 __all__ = [
     "biseccion",
     "generar_grafica",
@@ -12,5 +12,6 @@ __all__ = [
     "punto_fijo",
     "raices_multiples",
     "secante_metodo",
+    "newton_metodo",
     
 ]

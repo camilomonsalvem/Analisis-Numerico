@@ -86,6 +86,17 @@
             </div>
         </div>
 
+        {% if grafica %}
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">Gráfica de la función</h5>
+            </div>
+            <div class="card-body text-center">
+                <img src="data:image/png;base64,{{ grafica }}" alt="Gráfica de la función" class="img-fluid" />
+            </div>
+        </div>
+        {% endif %}
+
         {% if error %}
         <div class="alert alert-danger" role="alert">
             <strong>Error:</strong> {{ error }}
@@ -122,13 +133,13 @@
                             {% for iteracion in resultado.iteraciones %}
                             <tr>
                                 <td>{{ iteracion.iteracion }}</td>
-                                <td>{{ iteracion.x_prev }}</td>
-                                <td>{{ iteracion.x_curr }}</td>
-                                <td>{{ iteracion.f_x_prev }}</td>
-                                <td>{{ iteracion.f_x_curr }}</td>
-                                <td>{{ iteracion.x_new }}</td>
-                                <td>{{ iteracion.f_x_new }}</td>
-                                <td>{{ iteracion.error }}</td>
+                                <td>{{ iteracion.x_prev|floatformat:10 }}</td>
+                                <td>{{ iteracion.x_curr|floatformat:10 }}</td>
+                                <td>{{ iteracion.f_x_prev|floatformat:10 }}</td>
+                                <td>{{ iteracion.f_x_curr|floatformat:10 }}</td>
+                                <td>{{ iteracion.x_new|floatformat:10 }}</td>
+                                <td>{{ iteracion.f_x_new|floatformat:10 }}</td>
+                                <td>{{ iteracion.error|floatformat:10 }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -77,6 +77,17 @@
             </div>
         </div>
 
+        {% if grafica %}
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">Gráfica de la función</h5>
+            </div>
+            <div class="card-body text-center">
+                <img src="data:image/png;base64,{{ grafica }}" alt="Gráfica de la función" class="img-fluid" />
+            </div>
+        </div>
+        {% endif %}
+
         {% if error %}
         <div class="alert alert-danger" role="alert">
             {{ error }}

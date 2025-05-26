@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Método de Raíces Múltiples</h1>
     <p class="lead">Ingrese los parámetros para aplicar el método.</p>
 
     <!-- PASOS DEL MÉTODO -->
@@ -57,38 +56,50 @@
 
         <div class="mb-3">
             <label for="function_f" class="form-label">Función f(x)</label>
-            <input type="text" class="form-control" id="function_f" name="function_f" placeholder="Ej: x**3 - x - 1" required>
+            <input type="text" class="form-control" id="function_f" name="function_f" placeholder="Ej: x**3 - x - 1" required value="{{ request.POST.function_f }}">
         </div>
 
         <div class="mb-3">
             <label for="x0" class="form-label">Valor Inicial (x₀)</label>
-            <input type="number" step="any" class="form-control" id="x0" name="x0" required>
+            <input type="number" step="any" class="form-control" id="x0" name="x0" required value="{{ request.POST.x0 }}">
         </div>
 
         <div class="mb-3">
             <label for="tolerancia" class="form-label">Tolerancia</label>
-            <input type="number" step="any" class="form-control" id="tolerancia" name="tolerancia" required>
+            <input type="number" step="any" class="form-control" id="tolerancia" name="tolerancia" required value="{{ request.POST.tolerancia }}">
         </div>
 
         <div class="mb-3">
             <label for="max_iter" class="form-label">Máximo de Iteraciones</label>
-            <input type="number" class="form-control" id="max_iter" name="max_iter" required>
+            <input type="number" class="form-control" id="max_iter" name="max_iter" required value="{{ request.POST.max_iter }}">
         </div>
 
         <div class="mb-3">
             <label for="multiplicidad" class="form-label">Multiplicidad</label>
-            <input type="number" class="form-control" id="multiplicidad" name="multiplicidad" required>
+            <input type="number" class="form-control" id="multiplicidad" name="multiplicidad" required value="{{ request.POST.multiplicidad }}">
         </div>
 
         <button type="submit" class="btn btn-primary">Calcular</button>
     </form>
 
+    <!-- Mostrar la gráfica si existe -->
+    {% if grafica %}
+    <div class="card border-info mt-4 mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="card-title mb-0">Gráfica de la función</h5>
+        </div>
+        <div class="card-body text-center">
+            <img src="data:image/png;base64,{{ grafica }}" alt="Gráfica de la función" class="img-fluid" />
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Resultados -->
     {% if resultado %}
         <hr>
         <h3>Resultado</h3>
-        <p><strong>Raíz aproximada:</strong> {{ resultado.resultado_principal }}</p>
-        <p><strong>Error final:</strong> {{ resultado.error }}</p>
+        <p><strong>Raíz aproximada:</strong> {{ resultado.resultado_principal|floatformat:10 }}</p>
+        <p><strong>Error final:</strong> {{ resultado.error|floatformat:10 }}</p>
         <p><strong>Convergencia:</strong> {{ resultado.convergencia|yesno:"Sí,No" }}</p>
         <p><strong>Iteraciones:</strong> {{ resultado.num_iteraciones }}</p>
 
@@ -109,11 +120,11 @@
                     {% for i in resultado.iteraciones %}
                         <tr>
                             <td>{{ i.iteracion }}</td>
-                            <td>{{ i.valor }}</td>
-                            <td>{{ i.f_x }}</td>
-                            <td>{{ i.f_prime_x }}</td>
-                            <td>{{ i.x_siguiente }}</td>
-                            <td>{{ i.error }}</td>
+                            <td>{{ i.valor|floatformat:10 }}</td>
+                            <td>{{ i.f_x|floatformat:10 }}</td>
+                            <td>{{ i.f_prime_x|floatformat:10 }}</td>
+                            <td>{{ i.x_siguiente|floatformat:10 }}</td>
+                            <td>{{ i.error|floatformat:10 }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

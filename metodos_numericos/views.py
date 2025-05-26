@@ -85,7 +85,6 @@ def regla_falsa_view(request):
     return render(request, 'capitulo1/regla_falsa.html', context)
 
 
-
 def punto_fijo_view(request):
     """
     Vista para el método de Punto Fijo.
@@ -112,18 +111,20 @@ def punto_fijo_view(request):
                 context['error'] = resultado.get('error', 'Error desconocido')
                 return render(request, 'capitulo1/punto_fijo.html', context)
 
-            # (Opcional) generar gráfica si tienes función para eso
-            # if 'funcion' in locals():
-            #     grafica = generar_grafica(function_f, a, b, resultado['resultado_principal'], 'Método de Punto Fijo')
-            #     context['grafica'] = grafica
-
             # Agregar resultados al contexto
             context['resultado'] = resultado
+
+            # Generar gráfica (definimos intervalo pequeño alrededor de x0)
+            a = x0 - 2
+            b = x0 + 2
+            grafica = generar_grafica(function_f, a, b, resultado['resultado_principal'], metodo="Método de Punto Fijo")
+            context['grafica'] = grafica
 
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
 
     return render(request, 'capitulo1/punto_fijo.html', context)
+
 
 def raices_multiples_view(request):
     """
@@ -154,12 +155,17 @@ def raices_multiples_view(request):
             # Agregar resultados al contexto
             context['resultado'] = resultado
 
+            # Generar gráfica (intervalo centrado en x0)
+            a = x0 - 2
+            b = x0 + 2
+            grafica = generar_grafica(function_f, a, b, resultado['resultado_principal'], metodo="Método de Raíces Múltiples")
+            context['grafica'] = grafica
+
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
 
     return render(request, 'capitulo1/raices_multiples.html', context)
 
-from django.shortcuts import render
 
 def secante_metodo_view(request):
     """
@@ -185,13 +191,17 @@ def secante_metodo_view(request):
             # Revisar si hubo error
             if not resultado.get('success', False):
                 context['error'] = resultado.get('error', 'Error desconocido')
-                return render(request, 'capitulo1/secant_method.html', context)
+                return render(request, 'capitulo1/secante_metodo.html', context)
 
             # Agregar resultados al contexto
             context['resultado'] = resultado
+
+            # Generar gráfica (usar x0, x1 para intervalo)
+            a, b = sorted([x0, x1])
+            grafica = generar_grafica(function_f, a, b, resultado['resultado_principal'], metodo="Método de la Secante")
+            context['grafica'] = grafica
 
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
 
     return render(request, 'capitulo1/secante_metodo.html', context)
-

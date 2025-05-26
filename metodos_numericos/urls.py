@@ -20,6 +20,7 @@ urlpatterns = [
     
     # Capítulo 2
     path('capitulo2/', views.capitulo2, name='capitulo2'),
+    path('capitulo2/sor-metodo/', views.sor_metodo_view, name='sor_metodo'),
     
     # Capítulo 3
     path('capitulo3/', views.capitulo3, name='capitulo3'),

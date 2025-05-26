@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo, raices_multiples, secante_metodo, newton_metodo
+from metodos_numericos.utils.sor_metodo import sor_metodo
+from metodos_numericos.utils.Grafico import generar_grafica, plot_matrix_solution, plot_system_equations
+
 def index(request):
     """Vista de la página principal."""
     return render(request, 'home/index.html')
@@ -241,3 +244,61 @@ def newton_metodo_view(request):
             context['error'] = f"Error: {str(e)}"
 
     return render(request, 'capitulo1/newton_metodo.html', context)
+
+
+def sor_metodo_view(request):
+    context = {
+        'title': 'Método SOR',
+    }
+
+    if request.method == 'POST':
+        try:
+            matrix_a_raw = request.POST.get('matrix_a', '').strip()
+            vector_b_raw = request.POST.get('vector_b', '').strip()
+            initial_x_raw = request.POST.get('initial_x', '').strip()
+            relaxation_factor_raw = request.POST.get('relaxation_factor', '').strip()
+            tolerance_raw = request.POST.get('tolerance', '').strip()
+            max_iter_raw = request.POST.get('max_iter', '').strip()
+
+            relaxation_factor = float(relaxation_factor_raw) if relaxation_factor_raw else 1.25
+            tolerance = float(tolerance_raw) if tolerance_raw else 0.0001
+            max_iter = int(max_iter_raw) if max_iter_raw else 100
+
+            solver = sor_metodo()
+
+            # Usar validate_input para transformar y validar las entradas
+            validated = solver.validate_input(
+                matrix_a_raw=matrix_a_raw,
+                vector_b_raw=vector_b_raw,
+                initial_guess_raw=initial_x_raw,
+                tolerance=tolerance,
+                max_iterations=max_iter,
+                relaxation_factor=relaxation_factor,
+                matrix_size=len(matrix_a_raw.split(';')),
+            )
+
+            if isinstance(validated, str):  # Si es error, es string con mensaje
+                context['error'] = validated
+                return render(request, 'capitulo2/sor_metodo.html', context)
+
+            # validated es [A, b, x0]
+            A, b, x0 = validated
+
+            # Ahora sí llamar a solve con matrices listas
+            resultado = solver.solve(
+                A=A,
+                b=b,
+                x0=x0,
+                tolerance=tolerance,
+                max_iterations=max_iter,
+                relaxation_factor=relaxation_factor,
+                precision_type=1,
+            )
+
+            context['resultado'] = resultado
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo2/sor_metodo.html', context)
+

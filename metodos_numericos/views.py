@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo, raices_multiples
+from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo, raices_multiples, secante_metodo
 def index(request):
     """Vista de la página principal."""
     return render(request, 'home/index.html')
@@ -159,4 +159,39 @@ def raices_multiples_view(request):
 
     return render(request, 'capitulo1/raices_multiples.html', context)
 
+from django.shortcuts import render
+
+def secante_metodo_view(request):
+    """
+    Vista para el método de la secante.
+    """
+
+    context = {
+        'title': 'Método de la Secante'
+    }
+
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            function_f = request.POST.get('function_f')
+            x0 = float(request.POST.get('x0'))
+            x1 = float(request.POST.get('x1'))
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+
+            # Ejecutar el método de la secante
+            resultado = secante_metodo(x0, x1, tolerancia, max_iter, function_f)
+
+            # Revisar si hubo error
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo1/secant_method.html', context)
+
+            # Agregar resultados al contexto
+            context['resultado'] = resultado
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo1/secante_metodo.html', context)
 

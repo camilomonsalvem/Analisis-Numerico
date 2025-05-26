@@ -13,6 +13,7 @@ urlpatterns = [
     path('capitulo1/regla-falsa/', views.regla_falsa_view, name='regla_falsa'),
     path('capitulo1/punto-fijo/', views.punto_fijo_view, name='punto_fijo'),
     path('capitulo1/raices_multiples/', views.raices_multiples_view, name='raices_multiples'),
+    path('capitulo1/secante-metodo/', views.secante_metodo_view, name='secante_metodo'),
 
 
     

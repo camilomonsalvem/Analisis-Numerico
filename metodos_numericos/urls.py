@@ -15,6 +15,7 @@ urlpatterns = [
     # Capítulo 2
     path('capitulo2/', views.capitulo2, name='capitulo2'),
     path('capitulo2/gauss-seidel/', views.gauss_seidel_view, name='gauss_seidel'),
+    path('capitulo2/jacobi/', views.jacobi_view, name='jacobi'),
     
     # Capítulo 3
     path('capitulo3/', views.capitulo3, name='capitulo3'),

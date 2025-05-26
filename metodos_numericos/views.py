@@ -1,5 +1,8 @@
 from django.shortcuts import render
+import numpy as np
 from .utils import biseccion, generar_grafica, regla_falsa
+from .utils.Gaussseidel import gauss_seidel
+import ast
 
 def index(request):
     """Vista de la página principal."""
@@ -84,3 +87,38 @@ def regla_falsa_view(request):
             context['error'] = f"Error: {str(e)}"
     
     return render(request, 'capitulo1/regla_falsa.html', context)
+
+def gauss_seidel_view(request):
+    context = {
+        'title': 'Método de Gauss-Seidel'
+    }
+    if request.method == 'POST':
+        try:
+            # Obtener los datos del formulario
+            matrizA_str = request.POST.get('matrizA')  # cadena con filas separadas por líneas
+            vectorB_str = request.POST.get('vectorB')  # cadena con números separados por comas
+            vectorX0_str = request.POST.get('vectorX0')  # cadena con números separados por comas
+            
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+
+            # Convertir la matriz A (cadena) a numpy array
+            # Primero convertir la cadena en lista de listas (filas)
+            A = []
+            for fila in matrizA_str.strip().split('\n'):
+                A.append([float(num) for num in fila.split(',')])
+            A = np.array(A)
+
+            # Convertir b y x0 a arrays
+            b = np.array([float(num) for num in vectorB_str.split(',')])
+            x0 = np.array([float(num) for num in vectorX0_str.split(',')]) if vectorX0_str else None
+
+            # Ejecutar el método
+            resultado = gauss_seidel(A, b, x0, tolerancia, max_iter)
+
+            # Preparar datos para la plantilla
+            context['resultado'] = resultado
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+    return render(request, 'capitulo2/gauss_seidel.html', context)

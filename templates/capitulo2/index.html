@@ -1,0 +1,23 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Capítulo 1: Raíces de Ecuaciones{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Capítulo 1</h1>
+    <p class="lead">Métodos numéricos para encontrar raíces de ecuaciones no lineales.</p>
+    <hr class="my-4">
+    <p>Seleccione uno de los siguientes métodos:</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Gauss Seidel</h5>
+                <p class="card-text">El método de Gauss-Seidel es un algoritmo iterativo para resolver sistemas de ecuaciones lineales de la forma Ax=b.</p>
+                <a href="{% url 'metodos_numericos:gauss_seidel' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

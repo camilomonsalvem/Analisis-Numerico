@@ -19,4 +19,5 @@ urlpatterns = [
     
     # Capítulo 3
     path('capitulo3/', views.capitulo3, name='capitulo3'),
+    path('capitulo3/vandermonde/', views.vandermonde_view, name='vandermonde'),
 ]

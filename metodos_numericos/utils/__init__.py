@@ -3,6 +3,7 @@ from .Grafico import generar_grafica
 from .ReglaFalsa import regla_falsa
 from .Gaussseidel import gauss_seidel
 from .Jacobi import jacobi
+from .Vandermonde import vandermonde
 
 __all__ = [
     "biseccion",
@@ -10,4 +11,6 @@ __all__ = [
     "regla_falsa",
     "gauss_seidel"
     "jacobi"
+    "vandermonde"
+
 ]

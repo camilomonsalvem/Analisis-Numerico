@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Capítulo 1: Raíces de Ecuaciones{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Capítulo 3</h1>
+    <p class="lead">Interpolación numérica: Métodos para aproximar funciones y construir polinomios.</p>
+    <hr class="my-4">
+    <p>Seleccione uno de los siguientes métodos:</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Vandermonde</h5>
+                <p class="card-text">Es un procedimiento de interpolación polinómica que consiste en construir y resolver un sistema de ecuaciones lineales usando la matriz de Vandermonde, cuya solución determina los coeficientes del polinomio que pasa exactamente por un conjunto de puntos dados.</p>
+                <a href="{% url 'metodos_numericos:vandermonde' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

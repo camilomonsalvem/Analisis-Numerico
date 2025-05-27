@@ -69,7 +69,7 @@ def jacobi(A, b, x0, tolerancia, max_iter):
 # A = np.array([[45,13,-4,8],[-5,-28,4,-14],[9,15,63,-7],[2,3,-8,-42]], dtype=float)
 # b = np.array([-25,82,75,-43], dtype=float)
 # x0 = np.array([2,2,2,2], dtype=float)  # Vector inicial de aproximaciones
-# tolerancia = 5e-3
+# tolerancia = 1e-5
 # max_iter = 25
 
 # resultado = jacobi(A, b, x0, tolerancia, max_iter)

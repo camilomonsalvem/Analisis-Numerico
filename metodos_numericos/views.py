@@ -4,6 +4,7 @@ from .utils import biseccion, generar_grafica, regla_falsa
 from .utils.Gaussseidel import gauss_seidel
 import ast
 from .utils.Jacobi import jacobi
+from .utils.Vandermonde import vandermonde
 
 def index(request):
     """Vista de la página principal."""
@@ -157,3 +158,33 @@ def jacobi_view(request):
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
     return render(request, 'capitulo2/jacobi.html', context)
+
+def vandermonde_view(request):
+    context = {
+        'title': 'Interpolación con Matriz de Vandermonde'
+    }
+    
+    if request.method == 'POST':
+        try:
+            # Obtener los puntos x e y del formulario
+            x_points_str = request.POST.get('x_points')
+            y_points_str = request.POST.get('y_points')
+            
+            # Convertir las cadenas a listas de números
+            x_points = ast.literal_eval(x_points_str)
+            y_points = ast.literal_eval(y_points_str)
+            
+            # Ejecutar el método de Vandermonde
+            resultado = vandermonde(x_points, y_points)
+            
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido en la interpolación')
+                return render(request, 'capitulo3/vandermonde.html', context)
+            
+            # Agregar resultados al contexto
+            context['resultado'] = resultado
+            
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+    
+    return render(request, 'capitulo3/vandermonde.html', context)

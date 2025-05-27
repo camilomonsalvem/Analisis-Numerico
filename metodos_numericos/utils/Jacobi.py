@@ -70,6 +70,7 @@ def jacobi(A, b, x0, tolerancia, max_iter):
 # b = np.array([-25,82,75,-43], dtype=float)
 # x0 = np.array([2,2,2,2], dtype=float)  # Vector inicial de aproximaciones
 # tolerancia = 1e-5
+# tolerancia = 5e-3
 # max_iter = 25
 
 # resultado = jacobi(A, b, x0, tolerancia, max_iter)
@@ -78,4 +79,5 @@ def jacobi(A, b, x0, tolerancia, max_iter):
 # print("¿Convergió?:", resultado['convergencia'])
 # print("Iteración 0: x =", x0)
 # for it in resultado['iteraciones']:
+#     print(f"Iteración {it['iteracion']}: x = {it['x']}, error absoluto = {it['error_absoluto']:.2e}")
 #     print(f"Iteración {it['iteracion']}: x = {it['x']}, error absoluto = {it['error_absoluto']:.2e}")

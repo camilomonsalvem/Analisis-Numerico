@@ -13,6 +13,7 @@ from .Jacobi import jacobi
 from .Vandermonde import vandermonde
 from .Lagrange import lagrange
 from .Gaussseidel import gauss_seidel
+from .Jacobi import jacobi
 
 __all__ = [
     "biseccion",

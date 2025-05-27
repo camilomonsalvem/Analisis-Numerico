@@ -1,6 +1,7 @@
 import ast
 from django.shortcuts import render
 import numpy as np
+<<<<<<< HEAD
 from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo, raices_multiples, secante_metodo, newton_metodo
 from metodos_numericos.utils.sor_metodo import sor_metodo
 from metodos_numericos.utils.Grafico import generar_grafica, plot_matrix_solution, plot_system_equations
@@ -8,6 +9,12 @@ from metodos_numericos.utils.Jacobi import jacobi
 from metodos_numericos.utils.Vandermonde import vandermonde
 from metodos_numericos.utils.Lagrange import lagrange
 from metodos_numericos.utils.Gaussseidel import gauss_seidel
+=======
+from .utils import biseccion, generar_grafica, regla_falsa
+from .utils.Gaussseidel import gauss_seidel
+import ast
+from .utils.Jacobi import jacobi
+>>>>>>> 8645180 (Jacobi completo)
 
 def index(request):
     """Vista de la página principal."""
@@ -548,6 +555,7 @@ def jacobi_view(request):
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
     return render(request, 'capitulo2/jacobi.html', context)
+<<<<<<< HEAD
 
 def vandermonde_view(request):
     context = {
@@ -608,3 +616,5 @@ def lagrange_view(request):
             context['error'] = f"Error: {str(e)}"
     
     return render(request, 'capitulo3/lagrange.html', context)
+=======
+>>>>>>> 8645180 (Jacobi completo)

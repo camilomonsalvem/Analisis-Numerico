@@ -11,6 +11,7 @@
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
+    <!-- Método Bisección -->
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
@@ -20,13 +21,58 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Método Regla Falsa -->
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
                 <h5 class="card-title">Método de Regla Falsa</h5>
                 <p class="card-text">Método que utiliza interpolación lineal para aproximar la raíz en cada iteración.</p>
                 <a href="{% url 'metodos_numericos:regla_falsa' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Método Punto Fijo -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Punto Fijo</h5>
+                <p class="card-text">Método que reformula la ecuación como x = g(x) y busca la raíz mediante iteración fija.</p>
+                <a href="{% url 'metodos_numericos:punto_fijo' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Método Raíces Múltiples -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Raíces Múltiples</h5>
+                <p class="card-text">Método que mejora la convergencia cuando se conoce la multiplicidad de la raíz.</p>
+                <a href="{% url 'metodos_numericos:raices_multiples' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Método Secante -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de la Secante</h5>
+                <p class="card-text">Método numérico para encontrar raíces de funciones no lineales usando dos puntos iniciales.</p>
+                <a href="{% url 'metodos_numericos:secante_metodo' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Método Newton -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Newton</h5>
+                <p class="card-text">Método iterativo que usa la derivada para encontrar raíces de funciones no lineales rápidamente.</p>
+                <a href="{% url 'metodos_numericos:newton_metodo' %}" class="btn btn-primary">Ir al método</a>
             </div>
         </div>
     </div>

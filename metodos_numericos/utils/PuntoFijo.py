@@ -1,72 +1,102 @@
+import numpy as np
 import sympy as sp
 
-def punto_fijo(x0, tol, niter, A, f_str=None, g_str=None):
+def punto_fijo(function_f_str, function_g_str, x0, tolerancia, max_iteraciones):
     """
-    Punto fijo para resolver f(x)=0 usando g(x).
-    
-    Parámetros:
-    - x0: valor inicial
-    - tol: tolerancia de error
-    - niter: máximo número de iteraciones
-    - A: parámetro numérico para la función
-    - f_str: cadena con la función f(x), si None se usa la función default
-    - g_str: cadena con la función g(x), si None se usa la función default
-    
-    Retorna:
-    - n: número de iteraciones realizadas
-    - xn: lista con los valores de x en cada iteración
-    - fm: lista con valores de f(x) en cada iteración
-    - E: lista con errores en cada iteración
+    Implementa el método de punto fijo para encontrar raíces de f(x)=0 reformulando como x = g(x).
+
+    Args:
+        function_f_str (str): Cadena con la función f(x), por ejemplo "x**3 - x - 1"
+        function_g_str (str): Cadena con la función g(x) para iterar, por ejemplo "(x + 1)**(1/3)"
+        x0 (float): Valor inicial para la iteración
+        tolerancia (float): Tolerancia para el criterio de parada basado en error
+        max_iteraciones (int): Número máximo de iteraciones permitidas
+
+    Returns:
+        dict: Diccionario con resultados:
+            - 'resultado_principal': aproximación final de la raíz
+            - 'error': error final calculado
+            - 'iteraciones': lista con detalles de cada iteración
+            - 'convergencia': booleano indicando si convergió
+            - 'num_iteraciones': número de iteraciones realizadas
+            - 'success': True si el método fue exitoso, False si hubo error
+            - 'message': mensaje descriptivo de la ejecución
     """
 
+    # 1. Validaciones iniciales
+    if tolerancia <= 0:
+        return {"error": "La tolerancia debe ser un número positivo.", "success": False}
+
+    if max_iteraciones <= 0:
+        return {"error": "El número máximo de iteraciones debe ser positivo.", "success": False}
+
+    # Inicializar símbolos y funciones
     x = sp.symbols('x')
 
-    # Funciones por defecto (según tu código MATLAB)
-    if f_str is None:
-        f = ((A * (10**-2)) / 8) * sp.sin(x - A * (10**-3)) - x
-    else:
-        f = sp.sympify(f_str)
+    try:
+        f_expr = sp.sympify(function_f_str)
+        g_expr = sp.sympify(function_g_str)
+    except Exception as e:
+        return {"error": f"Error al interpretar las funciones: {str(e)}", "success": False}
 
-    if g_str is None:
-        g = ((A * (10**-2)) / 8) * sp.sin(x - A * (10**-3)) - x + x  # según código MATLAB
-    else:
-        g = sp.sympify(g_str)
+    # Convertir a funciones numéricas para evaluación rápida
+    f_num = sp.lambdify(x, f_expr, "numpy")
+    g_num = sp.lambdify(x, g_expr, "numpy")
 
-    c = 0
-    fm = [float(f.subs(x, x0))]
-    fe = fm[0]
-    E = [tol + 1]
-    error = E[0]
-    xn = [x0]
-    N = [c]
+    # 2. Inicializar variables
+    iteraciones = []
+    error = float('inf')
+    x_actual = x0
 
-    while error > tol and fe != 0 and c < niter:
-        x_new = float(g.subs(x, x0))
-        xn.append(x_new)
+    # 3. Bucle principal del método
+    for i in range(max_iteraciones):
+        try:
+            x_siguiente = g_num(x_actual)
+            f_val = f_num(x_siguiente)
+        except Exception as e:
+            return {
+                "error": f"Error numérico en iteración {i+1}: {str(e)}",
+                "success": False,
+            }
 
-        f_new = float(f.subs(x, x_new))
-        fm.append(f_new)
+        # Calcular error absoluto entre iteraciones
+        error = abs(x_siguiente - x_actual)
 
-        e_new = abs(x_new - x0)
-        E.append(e_new)
+        # Guardar detalles de la iteración
+        iteracion_info = {
+            "iteracion": i + 1,
+            "valor_actual": x_siguiente,
+            "f_evaluado": f_val,
+            "error": error,
+        }
+        iteraciones.append(iteracion_info)
 
-        error = e_new
-        x0 = x_new
+        # Verificar criterio de parada
+        if error < tolerancia or f_val == 0:
+            message = (
+                f"Convergió a raíz aproximada {x_siguiente} "
+                f"con error {error} en {i+1} iteraciones."
+            )
+            return {
+                "resultado_principal": x_siguiente,
+                "error": error,
+                "iteraciones": iteraciones,
+                "convergencia": True,
+                "num_iteraciones": i + 1,
+                "success": True,
+                "message": message,
+            }
 
-        c += 1
-        N.append(c)
-        fe = f_new
+        # Preparar para siguiente iteración
+        x_actual = x_siguiente
 
-    # Mostrar resultados estilo tabla
-    print(f'      n                Xn                   Fx                   Error')
-    for i in range(len(xn)):
-        print(f'{N[i]:7d} {xn[i]:18.8f} {fm[i]:20.8f} {E[i]:15.8f}')
-
-    if fe == 0:
-        print(f'\n{xn[-1]} es raíz de f(x)')
-    elif error < tol:
-        print(f'\n{xn[-1]} es una aproximación de una raíz con tolerancia {tol}')
-    else:
-        print(f'\nFracasó en {niter} iteraciones')
-
-    return c, xn, fm, E
+    # 4. Preparar resultados si no converge en máximo iteraciones
+    return {
+        "resultado_principal": x_actual,
+        "error": error,
+        "iteraciones": iteraciones,
+        "convergencia": False,
+        "num_iteraciones": max_iteraciones,
+        "success": True,
+        "message": f"No se alcanzó convergencia en {max_iteraciones} iteraciones.",
+    }

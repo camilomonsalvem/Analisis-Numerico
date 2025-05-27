@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from .utils import biseccion, generar_grafica, regla_falsa
+from .utils import biseccion, generar_grafica, regla_falsa, punto_fijo, raices_multiples, secante_metodo, newton_metodo
+from metodos_numericos.utils.sor_metodo import sor_metodo
+from metodos_numericos.utils.Grafico import generar_grafica, plot_matrix_solution, plot_system_equations
 
 def index(request):
     """Vista de la página principal."""
@@ -84,3 +86,219 @@ def regla_falsa_view(request):
             context['error'] = f"Error: {str(e)}"
     
     return render(request, 'capitulo1/regla_falsa.html', context)
+
+
+def punto_fijo_view(request):
+    """
+    Vista para el método de Punto Fijo.
+    """
+
+    context = {
+        'title': 'Método de Punto Fijo'
+    }
+
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            function_f = request.POST.get('function_f')
+            function_g = request.POST.get('function_g')
+            x0 = float(request.POST.get('x0'))
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+
+            # Ejecutar el método
+            resultado = punto_fijo(function_f, function_g, x0, tolerancia, max_iter)
+
+            # Revisar si hubo error
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo1/punto_fijo.html', context)
+
+            # Agregar resultados al contexto
+            context['resultado'] = resultado
+
+            # Generar gráfica (definimos intervalo pequeño alrededor de x0)
+            a = x0 - 2
+            b = x0 + 2
+            grafica = generar_grafica(function_f, a, b, resultado['resultado_principal'], metodo="Método de Punto Fijo")
+            context['grafica'] = grafica
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo1/punto_fijo.html', context)
+
+
+def raices_multiples_view(request):
+    """
+    Vista para el método de Raíces Múltiples.
+    """
+
+    context = {
+        'title': 'Método de Raíces Múltiples'
+    }
+
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            function_f = request.POST.get('function_f')
+            x0 = float(request.POST.get('x0'))
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+            multiplicidad = int(request.POST.get('multiplicidad'))
+
+            # Ejecutar el método
+            resultado = raices_multiples(function_f, x0, tolerancia, max_iter, multiplicidad)
+
+            # Revisar si hubo error
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo1/raices_multiples.html', context)
+
+            # Agregar resultados al contexto
+            context['resultado'] = resultado
+
+            # Generar gráfica (intervalo centrado en x0)
+            a = x0 - 2
+            b = x0 + 2
+            grafica = generar_grafica(function_f, a, b, resultado['resultado_principal'], metodo="Método de Raíces Múltiples")
+            context['grafica'] = grafica
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo1/raices_multiples.html', context)
+
+
+def secante_metodo_view(request):
+    """
+    Vista para el método de la secante.
+    """
+
+    context = {
+        'title': 'Método de la Secante'
+    }
+
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            function_f = request.POST.get('function_f')
+            x0 = float(request.POST.get('x0'))
+            x1 = float(request.POST.get('x1'))
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+
+            # Ejecutar el método de la secante
+            resultado = secante_metodo(x0, x1, tolerancia, max_iter, function_f)
+
+            # Revisar si hubo error
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo1/secante_metodo.html', context)
+
+            # Agregar resultados al contexto
+            context['resultado'] = resultado
+
+            # Generar gráfica (usar x0, x1 para intervalo)
+            a, b = sorted([x0, x1])
+            grafica = generar_grafica(function_f, a, b, resultado['resultado_principal'], metodo="Método de la Secante")
+            context['grafica'] = grafica
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo1/secante_metodo.html', context)
+
+def newton_metodo_view(request):
+    """
+    Vista para el método de Newton.
+    """
+    context = {
+        'title': 'Método de Newton',
+    }
+
+    if request.method == 'POST':
+        try:
+            funcion_str = request.POST.get('function_f')
+            x0 = float(request.POST.get('x0'))
+            tolerancia = float(request.POST.get('tolerancia'))
+            max_iter = int(request.POST.get('max_iter'))
+
+            # Ejecutar método de Newton
+            resultado = newton_metodo(funcion_str, x0, tolerancia, max_iter)
+
+            # Verificar si hubo error
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo1/newton_method.html', context)
+
+            # Generar gráfica con intervalo alrededor del valor inicial y raíz estimada
+            a = x0 - 5
+            b = x0 + 5
+            grafica = generar_grafica(funcion_str, a, b, raiz=resultado['resultado_principal'], metodo='Método de Newton')
+
+            context['resultado'] = resultado
+            context['grafica'] = grafica
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo1/newton_metodo.html', context)
+
+
+def sor_metodo_view(request):
+    context = {
+        'title': 'Método SOR',
+    }
+
+    if request.method == 'POST':
+        try:
+            matrix_a_raw = request.POST.get('matrix_a', '').strip()
+            vector_b_raw = request.POST.get('vector_b', '').strip()
+            initial_x_raw = request.POST.get('initial_x', '').strip()
+            relaxation_factor_raw = request.POST.get('relaxation_factor', '').strip()
+            tolerance_raw = request.POST.get('tolerance', '').strip()
+            max_iter_raw = request.POST.get('max_iter', '').strip()
+
+            relaxation_factor = float(relaxation_factor_raw) if relaxation_factor_raw else 1.25
+            tolerance = float(tolerance_raw) if tolerance_raw else 0.0001
+            max_iter = int(max_iter_raw) if max_iter_raw else 100
+
+            solver = sor_metodo()
+
+            # Usar validate_input para transformar y validar las entradas
+            validated = solver.validate_input(
+                matrix_a_raw=matrix_a_raw,
+                vector_b_raw=vector_b_raw,
+                initial_guess_raw=initial_x_raw,
+                tolerance=tolerance,
+                max_iterations=max_iter,
+                relaxation_factor=relaxation_factor,
+                matrix_size=len(matrix_a_raw.split(';')),
+            )
+
+            if isinstance(validated, str):  # Si es error, es string con mensaje
+                context['error'] = validated
+                return render(request, 'capitulo2/sor_metodo.html', context)
+
+            # validated es [A, b, x0]
+            A, b, x0 = validated
+
+            # Ahora sí llamar a solve con matrices listas
+            resultado = solver.solve(
+                A=A,
+                b=b,
+                x0=x0,
+                tolerance=tolerance,
+                max_iterations=max_iter,
+                relaxation_factor=relaxation_factor,
+                precision_type=1,
+            )
+
+            context['resultado'] = resultado
+
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+
+    return render(request, 'capitulo2/sor_metodo.html', context)
+

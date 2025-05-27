@@ -1,41 +1,81 @@
 import numpy as np
 
-def jacobi(A, b, x0, tol=1e-5, max_iter=100):
+def jacobi(A, b, x0, tolerancia, max_iter):
     """
-    Método de Jacobi para resolver Ax = b
-    
-    Parámetros:
-    - A: matriz cuadrada (numpy array)
-    - b: vector resultado (numpy array)
-    - x0: vector inicial (numpy array)
-    - tol: tolerancia para el error
-    - max_iter: número máximo de iteraciones
-    
-    Retorna:
-    - x: solución aproximada (numpy array)
-    - errores: lista con errores norma infinita por iteración
+    Implementa el método de Jacobi para resolver sistemas de ecuaciones lineales.
+
+    Args:
+        A (np.ndarray): Matriz de coeficientes del sistema.
+        b (np.ndarray): Vector de términos independientes.
+        x0 (np.ndarray): Vector inicial de aproximaciones.
+        tolerancia (float): Tolerancia para el criterio de convergencia.
+        max_iter (int): Número máximo de iteraciones.
+
+    Returns:
+        dict: Diccionario con los resultados del método.
     """
     n = len(b)
-    x = x0.astype(float)
-    errores = []
-
+    x_old = np.copy(x0)  # Vector inicial
+    iteraciones_resultado = []
+    
+    # Verificar dimensiones de A, b y x0
+    if A.shape[0] != n or A.shape[1] != n:
+        raise ValueError("La matriz A debe ser cuadrada.")
+    if len(b) != n or len(x0) != n:
+        raise ValueError("Las dimensiones de b y x0 deben coincidir con A.")
+    
     for k in range(max_iter):
-        x_new = np.zeros_like(x)
+        x_new = np.zeros_like(x_old)
+        
+        # Actualización de cada componente de x
         for i in range(n):
-            suma = 0
-            for j in range(n):
-                if j != i:
-                    suma += A[i, j] * x[j]
-            x_new[i] = (b[i] - suma) / A[i, i]
-
-        error = np.linalg.norm(x_new - x, np.inf)
-        errores.append(error)
-        x = x_new
-
-        if error < tol:
-            print(f'Convergió en {k+1} iteraciones con error {error}')
+            suma = np.dot(A[i, :], x_old) - A[i, i] * x_old[i]  # Sumar los términos fuera de la diagonal
+            x_new[i] = (b[i] - suma) / A[i, i]  # La fórmula del método de Jacobi
+        
+        # Calcular el error absoluto de cada componente δi = |x_i(k) - x_i(k+1)|
+        delta = np.abs(x_new - x_old)
+        
+        # Error absoluto total
+        error_absoluto = np.max(delta)
+        
+        # Calcular el error relativo
+        error_relativo = np.max(np.abs(delta) / np.abs(x_old))
+        
+        # Guardar el progreso de las iteraciones
+        iteracion_info = {
+            'iteracion': k + 1,
+            'x': x_new.copy(),
+            'error_absoluto': error_absoluto,
+            'error_relativo': error_relativo
+        }
+        iteraciones_resultado.append(iteracion_info)
+        
+        # Verificar si se cumple la tolerancia
+        if error_absoluto < tolerancia:
             break
-    else:
-        print(f'No convergió en {max_iter} iteraciones')
+        
+        # Actualizar el valor de x_old para la siguiente iteración
+        x_old = np.copy(x_new)
+    
+    resultado = {
+        'solucion': x_new,
+        'iteraciones': iteraciones_resultado,
+        'convergencia': error_absoluto < tolerancia
+    }
+    
+    return resultado
 
-    return x, errores
+
+# A = np.array([[45,13,-4,8],[-5,-28,4,-14],[9,15,63,-7],[2,3,-8,-42]], dtype=float)
+# b = np.array([-25,82,75,-43], dtype=float)
+# x0 = np.array([2,2,2,2], dtype=float)  # Vector inicial de aproximaciones
+# tolerancia = 1e-5
+# max_iter = 25
+
+# resultado = jacobi(A, b, x0, tolerancia, max_iter)
+
+# print("Solución:", resultado['solucion'])
+# print("¿Convergió?:", resultado['convergencia'])
+# print("Iteración 0: x =", x0)
+# for it in resultado['iteraciones']:
+#     print(f"Iteración {it['iteracion']}: x = {it['x']}, error absoluto = {it['error_absoluto']:.2e}")

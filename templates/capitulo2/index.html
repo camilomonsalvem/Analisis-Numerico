@@ -10,7 +10,29 @@
     <p>Seleccione uno de los siguientes métodos:</p>
 </div>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4"></div>
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Gauss Seidel</h5>
+                <p class="card-text">El método de Gauss-Seidel es un algoritmo iterativo para resolver sistemas de ecuaciones lineales de la forma Ax=b.</p>
+                <p class="card-text">En cada iteración, actualiza las variables inmediatamente después de calcularlas, lo que puede acelerar la convergencia.</p>
+                <a href="{% url 'metodos_numericos:gauss_seidel' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de jacobi</h5>
+                <p class="card-text">El método jacobi es un algoritmo iterativo para resolver sistemas de ecuaciones lineales de la forma Ax=b.</p>
+                <p class="card-text">En cada iteración, calcula cada variable usando los valores de la iteración anterior, sin actualizar los valores en el mismo paso.</p>
+                <a href="{% url 'metodos_numericos:jacobi' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+    
     <div class="col">
         <div class="card h-100">
             <div class="card-body">

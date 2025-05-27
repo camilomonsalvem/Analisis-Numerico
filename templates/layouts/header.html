@@ -25,6 +25,8 @@
                             Capítulo 2
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="cap1Dropdown">
+                            <li><a class="dropdown-item" href="{% url 'metodos_numericos:gauss_seidel' %}">Gauss Seidel</a></li>
+                            <li><a class="dropdown-item" href="{% url 'metodos_numericos:jacobi' %}">jacobi</a></li>
                             <li><a class="dropdown-item" href="{% url 'metodos_numericos:sor_metodo' %}">SOR</a></li>
                         </ul>
                     </li>
@@ -33,6 +35,8 @@
                             Capítulo 3
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="cap1Dropdown">
+                            <li><a class="dropdown-item" href="{% url 'metodos_numericos:vandermonde' %}">Vandermonde</a></li>
+                            <li><a class="dropdown-item" href="{% url 'metodos_numericos:lagrange' %}">Lagrange</a></li>
                             <li><a class="dropdown-item" href="{% url 'metodos_numericos:newton_interpolante' %}">Newton Interpolante</a></li>
                             <li><a class="dropdown-item" href="{% url 'metodos_numericos:spline_lineal' %}">Spline Lineal</a></li>
                             <li><a class="dropdown-item" href="{% url 'metodos_numericos:spline_cubico' %}">Spline Cúbico</a></li>

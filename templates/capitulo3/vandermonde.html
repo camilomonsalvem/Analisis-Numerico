@@ -1,0 +1,113 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Interpolación con Matriz de Vandermonde{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <!-- Card: Descripción -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Método de Vandermonde</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="mt-3">Descripción:</h6>
+                <p>
+                    La interpolación mediante la matriz de Vandermonde consiste en encontrar el polinomio interpolante que pasa por un conjunto de puntos,
+                    resolviendo un sistema lineal donde la matriz es la matriz de Vandermonde construida con los valores x.
+                </p>
+                <h6>Pasos del método:</h6>
+                <ol>
+                    <li>Ingresar los puntos x e y (listas en formato Python).</li>
+                    <li>Construir la matriz de Vandermonde y resolver para obtener los coeficientes.</li>
+                    <li>Evaluar el polinomio interpolante.</li>
+                    <li>Visualizar coeficientes y gráfica resultante.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Card: Instrucciones -->
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">Instrucciones</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Los puntos deben ingresarse como listas Python válidas (ejemplo: [1, 2, 3]).</li>
+                    <li>Las listas x e y deben tener igual longitud.</li>
+                    <li>Los valores de x deben ser únicos para evitar errores.</li>
+                    <li>Ejemplo:
+                        <ul>
+                            <li>x = [1, 2, 3, 4]</li>
+                            <li>y = [2, 4, 6, 8]</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <!-- Card: Formulario -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Interpolar usando Vandermonde</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="x_points" class="form-label">Lista de valores X:</label>
+                            <input type="text" class="form-control" id="x_points" name="x_points"
+                                placeholder="[1, 2, 3, 4]" required
+                                value="{{ request.POST.x_points|default:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="y_points" class="form-label">Lista de valores Y:</label>
+                            <input type="text" class="form-control" id="y_points" name="y_points"
+                                placeholder="[2, 4, 6, 8]" required
+                                value="{{ request.POST.y_points|default:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Calcular</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if error %}
+        <div class="card mb-4">
+            <div class="card-body bg-danger text-white">
+                <strong>Error:</strong> {{ error }}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if resultado %}
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">Resultados</h5>
+            </div>
+            <div class="card-body">
+                <h6>Coeficientes del polinomio interpolante:</h6>
+                <pre>{{ resultado.coeficientes }}</pre>
+
+                <h6 class="mt-4">Gráfica de interpolación:</h6>
+                {% if resultado.grafica %}
+                    <img src="data:image/png;base64,{{ resultado.grafica }}" alt="Gráfica Vandermonde" class="img-fluid rounded">
+                {% else %}
+                    <p>No se pudo generar la gráfica.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

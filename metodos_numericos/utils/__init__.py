@@ -9,6 +9,10 @@ from .sor_metodo import sor_metodo
 from .NewtonInterpolante import newton_interpolante
 from .SplineLineal import spline_lineal
 from .SplineCubico import spline_cubico
+from .Jacobi import jacobi
+from .Vandermonde import vandermonde
+from .Lagrange import lagrange
+from .Gaussseidel import gauss_seidel
 
 __all__ = [
     "biseccion",
@@ -24,4 +28,9 @@ __all__ = [
     "newton_interpolante",
     "spline_lineal",
     "spline_cubico",
+    "jacobi_metodo",
+    "vandermonde_metodo",
+    "lagrange_metodo",
+    "gauss_seidel_metodo",
+    
 ]

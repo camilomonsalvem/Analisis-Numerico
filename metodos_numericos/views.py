@@ -555,7 +555,6 @@ def jacobi_view(request):
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
     return render(request, 'capitulo2/jacobi.html', context)
-<<<<<<< HEAD
 
 def vandermonde_view(request):
     context = {
@@ -616,5 +615,3 @@ def lagrange_view(request):
             context['error'] = f"Error: {str(e)}"
     
     return render(request, 'capitulo3/lagrange.html', context)
-=======
->>>>>>> 8645180 (Jacobi completo)

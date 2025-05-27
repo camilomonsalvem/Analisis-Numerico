@@ -1,0 +1,48 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Capítulo 3: Interpolación de funciones{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Capítulo 3</h1>
+    <p class="lead">Métodos para interpolación de funciones.</p>
+    <hr class="my-4">
+    <p>Seleccione uno de los siguientes métodos:</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <!-- Método Newton Interpolante -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Newton Interpolante</h5>
+                <p class="card-text">Método que divide el intervalo por la mitad repetidamente hasta encontrar la raíz.</p>
+                <a href="{% url 'metodos_numericos:biseccion' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Método Spline Lineal -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Spline Lineal</h5>
+                <p class="card-text">Método que utiliza interpolación lineal para aproximar la raíz en cada iteración.</p>
+                <a href="{% url 'metodos_numericos:regla_falsa' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Método Spline Cúbico -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Método de Spline Cúbico</h5>
+                <p class="card-text">Método que reformula la ecuación como x = g(x) y busca la raíz mediante iteración fija.</p>
+                <a href="{% url 'metodos_numericos:punto_fijo' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

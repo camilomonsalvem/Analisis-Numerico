@@ -1,0 +1,48 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Capítulo 3: Interpolación de funciones{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Capítulo 3</h1>
+    <p class="lead">Métodos para interpolación de funciones.</p>
+    <hr class="my-4">
+    <p>Seleccione uno de los siguientes métodos:</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <!-- Método Newton Interpolante -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Newton Interpolante</h5>
+                <p class="card-text">Construye un polinomio que pasa por todos los puntos dados usando diferencias divididas. Es eficiente y permite agregar nuevos puntos fácilmente.</p>
+                <a href="{% url 'metodos_numericos:newton_interpolante' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Método Spline Lineal -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Spline Lineal</h5>
+                <p class="card-text">Conecta puntos consecutivos con segmentos de línea recta. Simple, estable y no produce oscilaciones entre puntos.</p>
+                <a href="{% url 'metodos_numericos:spline_lineal' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Método Spline Cúbico -->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Spline Cúbico</h5>
+                <p class="card-text">Utiliza polinomios cúbicos para conectar puntos, garantizando continuidad en función y derivadas. Produce curvas muy suaves.</p>
+                <a href="{% url 'metodos_numericos:spline_cubico' %}" class="btn btn-primary">Ir al método</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

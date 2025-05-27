@@ -24,4 +24,7 @@ urlpatterns = [
     
     # Capítulo 3
     path('capitulo3/', views.capitulo3, name='capitulo3'),
+    path('capitulo3/newton-interpolante/', views.newton_interpolante_view, name='newton_interpolante'),
+    path('capitulo3/spline-lineal/', views.spline_lineal_view, name='spline_lineal'),
+    path('capitulo3/spline-cubico/', views.spline_cubico_view, name='spline_cubico'),
 ]

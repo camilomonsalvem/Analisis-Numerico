@@ -173,3 +173,98 @@ def plot_system_equations(A: list[list[float]], b: list[float], solution: list[f
     # Guardar la gráfica como SVG
     plt.savefig(output_file, format="svg")
     plt.close()
+
+def generar_grafica_interpolacion(resultado, metodo="Interpolación", puntos_evaluacion=None):
+    """
+    Genera una gráfica para métodos de interpolación.
+    
+    Args:
+        resultado (dict): Resultado del método de interpolación.
+        metodo (str): Nombre del método utilizado.
+        puntos_evaluacion (list, optional): Puntos adicionales para evaluar.
+        
+    Returns:
+        str: Imagen de la gráfica codificada en base64.
+    """
+    fig, ax = plt.subplots(figsize=(12, 8))
+    
+    puntos_x = resultado['puntos_x']
+    puntos_y = resultado['puntos_y']
+    
+    # Rango para graficar
+    x_min, x_max = min(puntos_x), max(puntos_x)
+    margen = (x_max - x_min) * 0.1
+    x_plot = np.linspace(x_min - margen, x_max + margen, 500)
+    
+    # Graficar según el tipo de método
+    if 'segmentos' in resultado:  # Spline lineal o cúbico
+        # Graficar cada segmento
+        for i, segmento in enumerate(resultado['segmentos']):
+            x_seg = np.linspace(segmento['x0'], segmento['x1'], 100)
+            y_seg = [segmento['funcion'](x) for x in x_seg]
+            ax.plot(x_seg, y_seg, '-', linewidth=2, 
+                   label=f'Segmento {i+1}' if len(resultado['segmentos']) <= 5 else None)
+    
+    elif 'polinomio_func' in resultado:  # Newton interpolante
+        # Graficar el polinomio completo
+        y_plot = []
+        for x_val in x_plot:
+            try:
+                y_val = resultado['polinomio_func'](x_val)
+                if not np.isnan(y_val) and not np.isinf(y_val) and abs(y_val) < 1000:
+                    y_plot.append(y_val)
+                else:
+                    y_plot.append(None)
+            except:
+                y_plot.append(None)
+        
+        # Filtrar valores válidos
+        x_valid = []
+        y_valid = []
+        for x_val, y_val in zip(x_plot, y_plot):
+            if y_val is not None:
+                x_valid.append(x_val)
+                y_valid.append(y_val)
+        
+        if x_valid:
+            ax.plot(x_valid, y_valid, 'b-', linewidth=2, label='Polinomio interpolante')
+    
+    # Graficar puntos originales
+    ax.plot(puntos_x, puntos_y, 'ro', markersize=8, label='Puntos dados', zorder=5)
+    
+    # Anotar los puntos
+    for i, (x_val, y_val) in enumerate(zip(puntos_x, puntos_y)):
+        ax.annotate(f'P{i+1}({x_val}, {y_val})', 
+                   (x_val, y_val), 
+                   xytext=(5, 5), 
+                   textcoords='offset points',
+                   fontsize=9,
+                   bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8))
+    
+    # Graficar puntos de evaluación si existen
+    if puntos_evaluacion:
+        for punto in puntos_evaluacion:
+            x_eval, y_eval = punto['x'], punto['y']
+            ax.plot(x_eval, y_eval, 'go', markersize=6, zorder=4)
+            ax.annotate(f'({x_eval:.3f}, {y_eval:.3f})', 
+                       (x_eval, y_eval), 
+                       xytext=(5, -15), 
+                       textcoords='offset points',
+                       fontsize=8,
+                       color='green')
+    
+    # Configuración de la gráfica
+    ax.set_title(f'{metodo} - Gráfica de Interpolación', fontsize=14, fontweight='bold')
+    ax.set_xlabel('x', fontsize=12)
+    ax.set_ylabel('y', fontsize=12)
+    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=10)
+    
+    # Convertir la figura a una imagen en base64
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png', dpi=100, bbox_inches='tight')
+    buf.seek(0)
+    img_str = base64.b64encode(buf.read()).decode('utf-8')
+    plt.close(fig)
+    
+    return img_str

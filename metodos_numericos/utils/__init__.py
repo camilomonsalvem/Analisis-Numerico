@@ -4,6 +4,7 @@ from .ReglaFalsa import regla_falsa
 from .Gaussseidel import gauss_seidel
 from .Jacobi import jacobi
 from .Vandermonde import vandermonde
+from .Lagrange import lagrange
 
 __all__ = [
     "biseccion",
@@ -12,5 +13,6 @@ __all__ = [
     "gauss_seidel"
     "jacobi"
     "vandermonde"
+    "lagrange"
 
 ]

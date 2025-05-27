@@ -5,6 +5,7 @@ from .utils.Gaussseidel import gauss_seidel
 import ast
 from .utils.Jacobi import jacobi
 from .utils.Vandermonde import vandermonde
+from .utils.Lagrange import lagrange
 
 def index(request):
     """Vista de la página principal."""
@@ -188,3 +189,33 @@ def vandermonde_view(request):
             context['error'] = f"Error: {str(e)}"
     
     return render(request, 'capitulo3/vandermonde.html', context)
+
+def lagrange_view(request):
+    context = {
+        'title': 'Interpolación con Lagrange'
+    }
+    
+    if request.method == 'POST':
+        try:
+            # Obtener los puntos x e y del formulario
+            x_points_str = request.POST.get('x_points')
+            y_points_str = request.POST.get('y_points')
+            
+            # Convertir las cadenas a listas de números
+            x_points = ast.literal_eval(x_points_str)
+            y_points = ast.literal_eval(y_points_str)
+            
+            # Ejecutar el método de Lagrange
+            resultado = lagrange(x_points, y_points)
+            
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido en la interpolación')
+                return render(request, 'capitulo3/lagrange.html', context)
+            
+            # Agregar resultados al contexto
+            context['resultado'] = resultado
+            
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+    
+    return render(request, 'capitulo3/lagrange.html', context)

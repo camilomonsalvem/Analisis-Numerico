@@ -5,7 +5,10 @@ from .PuntoFijo import punto_fijo
 from .RaicesMultiples import raices_multiples
 from .Secante import secante_metodo
 from .Newton import newton_metodo
-from .sor_metodo import sor_metodo  # Importa tu clase SOR
+from .sor_metodo import sor_metodo
+from .NewtonInterpolante import newton_interpolante
+from .SplineLineal import spline_lineal
+from .SplineCubico import spline_cubico
 
 __all__ = [
     "biseccion",
@@ -17,5 +20,8 @@ __all__ = [
     "raices_multiples",
     "secante_metodo",
     "newton_metodo",
-    "sor_metodo",  # Exporta la clase SOR
+    "sor_metodo",
+    "newton_interpolante",
+    "spline_lineal",
+    "spline_cubico",
 ]

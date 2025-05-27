@@ -302,3 +302,173 @@ def sor_metodo_view(request):
 
     return render(request, 'capitulo2/sor_metodo.html', context)
 
+def newton_interpolante_view(request):
+    """Vista para el método de Newton Interpolante."""
+    context = {
+        'title': 'Newton Interpolante'
+    }
+    
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            puntos_x_str = request.POST.get('puntos_x', '').strip()
+            puntos_y_str = request.POST.get('puntos_y', '').strip()
+            puntos_evaluar_str = request.POST.get('puntos_evaluar', '').strip()
+            
+            # Procesar puntos X e Y
+            puntos_x = [float(x.strip()) for x in puntos_x_str.split(',') if x.strip()]
+            puntos_y = [float(y.strip()) for y in puntos_y_str.split(',') if y.strip()]
+            
+            # Validar límite de puntos
+            if len(puntos_x) > 8:
+                context['error'] = "Se admiten máximo 8 puntos."
+                return render(request, 'capitulo3/newton_interpolante.html', context)
+            
+            # Ejecutar método
+            from metodos_numericos.utils.NewtonInterpolante import newton_interpolante
+            resultado = newton_interpolante(puntos_x, puntos_y)
+            
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo3/newton_interpolante.html', context)
+            
+            # Evaluar puntos específicos si se proporcionaron
+            puntos_evaluados = []
+            if puntos_evaluar_str:
+                puntos_evaluar = [float(x.strip()) for x in puntos_evaluar_str.split(',') if x.strip()]
+                for x_val in puntos_evaluar:
+                    y_val = resultado['polinomio_func'](x_val)
+                    puntos_evaluados.append({'x': x_val, 'y': y_val})
+            
+            # Generar gráfica
+            from metodos_numericos.utils.Grafico import generar_grafica_interpolacion
+            grafica = generar_grafica_interpolacion(resultado, "Newton Interpolante", puntos_evaluados)
+            
+            context['resultado'] = resultado
+            context['puntos_evaluados'] = puntos_evaluados
+            context['grafica'] = grafica
+            
+        except ValueError as e:
+            context['error'] = "Error en el formato de los datos. Verifique que todos los valores sean numéricos."
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+    
+    return render(request, 'capitulo3/newton_interpolante.html', context)
+
+
+def spline_lineal_view(request):
+    """Vista para el método de Spline Lineal."""
+    context = {
+        'title': 'Spline Lineal'
+    }
+    
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            puntos_x_str = request.POST.get('puntos_x', '').strip()
+            puntos_y_str = request.POST.get('puntos_y', '').strip()
+            puntos_evaluar_str = request.POST.get('puntos_evaluar', '').strip()
+            
+            # Procesar puntos X e Y
+            puntos_x = [float(x.strip()) for x in puntos_x_str.split(',') if x.strip()]
+            puntos_y = [float(y.strip()) for y in puntos_y_str.split(',') if y.strip()]
+            
+            # Validar límite de puntos
+            if len(puntos_x) > 8:
+                context['error'] = "Se admiten máximo 8 puntos."
+                return render(request, 'capitulo3/spline_lineal.html', context)
+            
+            # Ejecutar método
+            from metodos_numericos.utils.SplineLineal import spline_lineal
+            resultado = spline_lineal(puntos_x, puntos_y)
+            
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo3/spline_lineal.html', context)
+            
+            # Evaluar puntos específicos si se proporcionaron
+            puntos_evaluados = []
+            if puntos_evaluar_str:
+                puntos_evaluar = [float(x.strip()) for x in puntos_evaluar_str.split(',') if x.strip()]
+                for x_val in puntos_evaluar:
+                    y_val = resultado['funcion_evaluacion'](x_val)
+                    puntos_evaluados.append({'x': x_val, 'y': y_val})
+            
+            # Generar gráfica
+            from metodos_numericos.utils.Grafico import generar_grafica_interpolacion
+            grafica = generar_grafica_interpolacion(resultado, "Spline Lineal", puntos_evaluados)
+            
+            context['resultado'] = resultado
+            context['puntos_evaluados'] = puntos_evaluados
+            context['grafica'] = grafica
+            
+        except ValueError as e:
+            context['error'] = "Error en el formato de los datos. Verifique que todos los valores sean numéricos."
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+    
+    return render(request, 'capitulo3/spline_lineal.html', context)
+
+
+def spline_cubico_view(request):
+    """Vista para el método de Spline Cúbico."""
+    context = {
+        'title': 'Spline Cúbico'
+    }
+    
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            puntos_x_str = request.POST.get('puntos_x', '').strip()
+            puntos_y_str = request.POST.get('puntos_y', '').strip()
+            puntos_evaluar_str = request.POST.get('puntos_evaluar', '').strip()
+            
+            # Procesar puntos X e Y
+            puntos_x = [float(x.strip()) for x in puntos_x_str.split(',') if x.strip()]
+            puntos_y = [float(y.strip()) for y in puntos_y_str.split(',') if y.strip()]
+            
+            # Validar límite de puntos
+            if len(puntos_x) > 8:
+                context['error'] = "Se admiten máximo 8 puntos."
+                return render(request, 'capitulo3/spline_cubico.html', context)
+            
+            # Ejecutar método
+            from metodos_numericos.utils.SplineCubico import spline_cubico
+            resultado = spline_cubico(puntos_x, puntos_y)
+            
+            if not resultado.get('success', False):
+                context['error'] = resultado.get('error', 'Error desconocido')
+                return render(request, 'capitulo3/spline_cubico.html', context)
+            
+            # Evaluar puntos específicos si se proporcionaron
+            puntos_evaluados = []
+            if puntos_evaluar_str:
+                puntos_evaluar = [float(x.strip()) for x in puntos_evaluar_str.split(',') if x.strip()]
+                for x_val in puntos_evaluar:
+                    y_val = resultado['funcion_evaluacion'](x_val)
+                    puntos_evaluados.append({'x': x_val, 'y': y_val})
+            
+            # Generar gráfica
+            from metodos_numericos.utils.Grafico import generar_grafica_interpolacion
+            grafica = generar_grafica_interpolacion(resultado, "Spline Cúbico", puntos_evaluados)
+            
+            # Preparar datos para la tabla de segundas derivadas
+            puntos_derivadas = []
+            for i, (x_val, derivada) in enumerate(zip(resultado['puntos_x'], resultado['segundas_derivadas'])):
+                puntos_derivadas.append({
+                    'indice': i,
+                    'x': x_val,
+                    'derivada': derivada
+                })
+            
+            context['resultado'] = resultado
+            context['puntos_evaluados'] = puntos_evaluados
+            context['puntos_derivadas'] = puntos_derivadas
+            context['grafica'] = grafica
+            
+        except ValueError as e:
+            context['error'] = "Error en el formato de los datos. Verifique que todos los valores sean numéricos."
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+    
+    return render(request, 'capitulo3/spline_cubico.html', context)

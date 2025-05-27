@@ -15,9 +15,9 @@
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">Método de Newton Interpolante</h5>
-                <p class="card-text">Método que divide el intervalo por la mitad repetidamente hasta encontrar la raíz.</p>
-                <a href="{% url 'metodos_numericos:biseccion' %}" class="btn btn-primary">Ir al método</a>
+                <h5 class="card-title">Newton Interpolante</h5>
+                <p class="card-text">Construye un polinomio que pasa por todos los puntos dados usando diferencias divididas. Es eficiente y permite agregar nuevos puntos fácilmente.</p>
+                <a href="{% url 'metodos_numericos:newton_interpolante' %}" class="btn btn-primary">Ir al método</a>
             </div>
         </div>
     </div>
@@ -26,9 +26,9 @@
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">Método de Spline Lineal</h5>
-                <p class="card-text">Método que utiliza interpolación lineal para aproximar la raíz en cada iteración.</p>
-                <a href="{% url 'metodos_numericos:regla_falsa' %}" class="btn btn-primary">Ir al método</a>
+                <h5 class="card-title">Spline Lineal</h5>
+                <p class="card-text">Conecta puntos consecutivos con segmentos de línea recta. Simple, estable y no produce oscilaciones entre puntos.</p>
+                <a href="{% url 'metodos_numericos:spline_lineal' %}" class="btn btn-primary">Ir al método</a>
             </div>
         </div>
     </div>
@@ -37,9 +37,9 @@
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">Método de Spline Cúbico</h5>
-                <p class="card-text">Método que reformula la ecuación como x = g(x) y busca la raíz mediante iteración fija.</p>
-                <a href="{% url 'metodos_numericos:punto_fijo' %}" class="btn btn-primary">Ir al método</a>
+                <h5 class="card-title">Spline Cúbico</h5>
+                <p class="card-text">Utiliza polinomios cúbicos para conectar puntos, garantizando continuidad en función y derivadas. Produce curvas muy suaves.</p>
+                <a href="{% url 'metodos_numericos:spline_cubico' %}" class="btn btn-primary">Ir al método</a>
             </div>
         </div>
     </div>

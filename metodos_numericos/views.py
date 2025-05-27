@@ -13,6 +13,7 @@ from .utils.Gaussseidel import gauss_seidel
 import ast
 from .utils.Jacobi import jacobi
 from .utils.Vandermonde import vandermonde
+from .utils.Lagrange import lagrange
 
 def index(request):
     """Vista de la página principal."""

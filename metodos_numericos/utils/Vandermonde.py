@@ -96,3 +96,4 @@ def vandermonde(x_points, y_points):
 
 #     res = vandermonde(x_pts, y_pts)
 #     res['graficar']()
+#     res['graficar']()
